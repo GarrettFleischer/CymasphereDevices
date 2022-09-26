@@ -8,7 +8,7 @@
   ==============================================================================
 */
 
-#include "CymasphereDevicesExternal.h"
+#include "Juce4Unity.h"
 
 
 DeviceManagement* DeviceManagementCreate()

@@ -8,7 +8,7 @@
   ==============================================================================
 */
 
-#include "CymasphereDevices.h"
+#include "DeviceManagement.h"
 
 DeviceManagement::DeviceManagement()
     : inputDevices(true, this),

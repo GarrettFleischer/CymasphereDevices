@@ -9,7 +9,7 @@
 */
 
 #pragma once
-#include "CymasphereDevices.h"
+#include "DeviceManagement.h"
 
 #if JUCE_MSVC
 #define UNITY_INTERFACE_API __stdcall
