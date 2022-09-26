@@ -26,6 +26,11 @@ void DeviceManagementRegisterCallback(DeviceManagement* management, ExternalMidi
     management->registerCallback(callback);
 }
 
+void DeviceManagementRegisterLogger(DeviceManagement* management, ExternalLogger logger)
+{
+    management->registerLogger(logger);
+}
+
 void DeviceManagementRefresh(DeviceManagement* management)
 {
     management->refresh();
@@ -51,14 +56,14 @@ bool DeviceManagementOutputDeviceIsEnabled(DeviceManagement* management, int id)
     return management->outputDeviceIsEnabled(id);
 }
 
-void DeviceManagementSetInputDeviceEnabled(DeviceManagement* management, int id, bool enabled)
+bool DeviceManagementSetInputDeviceEnabled(DeviceManagement* management, int id, bool enabled)
 {
-    management->setInputDeviceEnabled(id, enabled);
+    return management->setInputDeviceEnabled(id, enabled);
 }
 
-void DeviceManagementSetOutputDeviceEnabled(DeviceManagement* management, int id, bool enabled)
+bool DeviceManagementSetOutputDeviceEnabled(DeviceManagement* management, int id, bool enabled)
 {
-    management->setOutputDeviceEnabled(id, enabled);
+    return management->setOutputDeviceEnabled(id, enabled);
 }
 
 void DeviceManagementGetInputDeviceName(DeviceManagement* management, int id, char* str, int strlen)

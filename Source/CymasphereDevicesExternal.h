@@ -26,6 +26,9 @@ extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementDelet
 extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementRegisterCallback(
     DeviceManagement* management, ExternalMidiInputCallback callback);
 
+extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementRegisterLogger(
+    DeviceManagement* management, ExternalLogger logger);
+
 extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementRefresh(
     DeviceManagement* management);
 
@@ -39,9 +42,9 @@ extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementInput
 extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementOutputDeviceIsEnabled(
     DeviceManagement* management, int id);
 
-extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementSetInputDeviceEnabled(
+extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementSetInputDeviceEnabled(
     DeviceManagement* management, int id, bool enabled);
-extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementSetOutputDeviceEnabled(
+extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementSetOutputDeviceEnabled(
     DeviceManagement* management, int id, bool enabled);
 
 extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementGetInputDeviceName(

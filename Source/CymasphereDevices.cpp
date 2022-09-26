@@ -24,8 +24,7 @@ DeviceManagement::~DeviceManagement()
 }
 
 void DeviceManagement::handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message)
-{
-    // sendToOutputs(message);
+{    
     auto index = 0;
     for (; index < inputDevices->size(); ++index)
     {
@@ -35,29 +34,25 @@ void DeviceManagement::handleIncomingMidiMessage(juce::MidiInput* source, const 
         }
     }
 
-    const juce::ScopedLock s1(midiMonitorLock);
-    incomingMessages.add(MidiInputData{index, message});
-    triggerAsyncUpdate();
+    // logExternal(message.getDescription());
+
+    for (const auto callback : callbacks)
+    {
+        const auto raw = message.getRawData();
+        callback(index, raw[0], raw[1], raw[2]);
+    }
 }
 
-void DeviceManagement::handleAsyncUpdate()
+void DeviceManagement::logExternal(juce::String message)
 {
-    juce::Array<MidiInputData> messages;
+    auto len = message.length() + 1;
+    auto logMessage = new char[len];
+    message.copyToUTF8(logMessage, len);
+    for (auto logger : loggers)
     {
-        const juce::ScopedLock s1(midiMonitorLock);
-        messages.swapWith(incomingMessages);
+        logger(logMessage, len);
     }
-
-    for (auto& data : messages)
-    {
-        for (const auto callback : callbacks)
-        {
-            const auto raw = data.message.getRawData();
-            callback(data.device, raw[0], raw[1], raw[2]);
-        }
-        
-        DBG(data.message.getDescription());
-    }
+    delete[] logMessage;
 }
 
 // void DeviceManagement::sendToOutputs(const juce::MidiMessage& msg)
@@ -70,6 +65,11 @@ void DeviceManagement::handleAsyncUpdate()
 void DeviceManagement::registerCallback(ExternalMidiInputCallback callback)
 {
     callbacks.add(callback);
+}
+
+void DeviceManagement::registerLogger(ExternalLogger log)
+{
+    loggers.add(log);
 }
 
 void DeviceManagement::refresh()

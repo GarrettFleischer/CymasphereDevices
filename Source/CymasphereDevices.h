@@ -14,22 +14,17 @@
 #include "MidiDeviceList.h"
 
 
-
 using ExternalMidiInputCallback = void(*)(int id, juce::uint8, juce::uint8, juce::uint8);
+using ExternalLogger = void(*)(char* str, int strlen);
 
-struct MidiInputData
-{
-    int device;
-    juce::MidiMessage message;
-};
-
-class DeviceManagement final : juce::MidiInputCallback, juce::AsyncUpdater
+class DeviceManagement final : juce::MidiInputCallback
 {
 public:
     DeviceManagement();
     ~DeviceManagement() override;
 
     void registerCallback(ExternalMidiInputCallback callback);
+    void registerLogger(ExternalLogger log);
 
     void refresh();
 
@@ -52,12 +47,11 @@ private:
     MidiDeviceList* inputDevices;
     MidiDeviceList* outputDevices;
     juce::Array<ExternalMidiInputCallback> callbacks;
-
-    juce::CriticalSection midiMonitorLock;
-    juce::Array<MidiInputData> incomingMessages;
+    juce::Array<ExternalLogger> loggers;
 
     void handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message) override;
-    void handleAsyncUpdate() override;
+
+    void logExternal(juce::String message);
+
     // void sendToOutputs (const juce::MidiMessage& msg);
 };
-
