@@ -76,13 +76,6 @@ void DeviceManagement::sendMidiMessage(int id, juce::MidiMessage& message)
     }
 }
 
-// void DeviceManagement::sendToOutputs(const juce::MidiMessage& msg)
-// {
-//     for (const auto midiOutput : *outputDevices->getDevices())
-//         if (midiOutput->outDevice.get() != nullptr)
-//             midiOutput->outDevice->sendMessageNow(msg);
-// }
-
 void DeviceManagement::registerCallback(ExternalMidiInputCallback callback)
 {
     callbacks.add(callback);

@@ -57,6 +57,4 @@ private:
     void logExternal(juce::String message);
 
     void sendMidiMessage(int id, juce::MidiMessage& message);
-
-    // void sendToOutputs (const juce::MidiMessage& msg);
 };
