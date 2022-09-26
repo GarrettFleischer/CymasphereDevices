@@ -43,6 +43,9 @@ public:
     void getOutputDeviceName(int id, char* str, int strlen);
     void getOutputDeviceIdentifier(int id, char* str, int strlen);
 
+    void noteOn(int channel, int midi, float velocity, int id = -1);
+    void noteOff(int channel, int midi, int id = -1);
+
 private:
     MidiDeviceList* inputDevices;
     MidiDeviceList* outputDevices;
@@ -52,6 +55,8 @@ private:
     void handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message) override;
 
     void logExternal(juce::String message);
+
+    void sendMidiMessage(int id, juce::MidiMessage& message);
 
     // void sendToOutputs (const juce::MidiMessage& msg);
 };

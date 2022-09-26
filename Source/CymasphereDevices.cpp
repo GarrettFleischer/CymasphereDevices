@@ -24,7 +24,7 @@ DeviceManagement::~DeviceManagement()
 }
 
 void DeviceManagement::handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message)
-{    
+{
     auto index = 0;
     for (; index < inputDevices->size(); ++index)
     {
@@ -53,6 +53,27 @@ void DeviceManagement::logExternal(juce::String message)
         logger(logMessage, len);
     }
     delete[] logMessage;
+}
+
+void DeviceManagement::sendMidiMessage(int id, juce::MidiMessage& message)
+{
+    if (id > -1)
+    {
+        if (outputDeviceIsEnabled(id))
+        {
+            outputDevices->get(id)->outDevice->sendMessageNow(message);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < outputDevices->size(); ++i)
+        {
+            if (outputDeviceIsEnabled(i))
+            {
+                outputDevices->get(i)->outDevice->sendMessageNow(message);
+            }
+        }
+    }
 }
 
 // void DeviceManagement::sendToOutputs(const juce::MidiMessage& msg)
@@ -128,4 +149,16 @@ void DeviceManagement::getOutputDeviceName(int id, char* str, int strlen)
 void DeviceManagement::getOutputDeviceIdentifier(int id, char* str, int strlen)
 {
     outputDevices->get(id)->deviceInfo.identifier.copyToUTF8(str, strlen);
+}
+
+void DeviceManagement::noteOn(int channel, int midi, float velocity, int id)
+{
+    auto message = juce::MidiMessage::noteOn(channel, midi, velocity);
+    sendMidiMessage(id, message);
+}
+
+void DeviceManagement::noteOff(int channel, int midi, int id)
+{
+    auto message = juce::MidiMessage::noteOff(channel, midi);
+    sendMidiMessage(id, message);
 }
