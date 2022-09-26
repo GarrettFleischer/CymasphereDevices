@@ -41,7 +41,6 @@ extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementInput
     DeviceManagement* management, int id);
 extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementOutputDeviceIsEnabled(
     DeviceManagement* management, int id);
-
 extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementSetInputDeviceEnabled(
     DeviceManagement* management, int id, bool enabled);
 extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementSetOutputDeviceEnabled(
@@ -55,3 +54,8 @@ extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementGetOu
     DeviceManagement* management, int id, char* str, int strlen);
 extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementGetOutputDeviceIdentifier(
     DeviceManagement* management, int id, char* str, int strlen);
+
+extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementNoteOn(
+    DeviceManagement* management, int channel, int midi, float velocity, int id);
+extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementNoteOff(
+    DeviceManagement* management, int channel, int midi, int id);

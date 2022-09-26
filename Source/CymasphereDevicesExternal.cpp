@@ -85,3 +85,13 @@ void DeviceManagementGetOutputDeviceIdentifier(DeviceManagement* management, int
 {
     management->getOutputDeviceIdentifier(id, str, strlen);
 }
+
+void DeviceManagementNoteOn(DeviceManagement* management, int channel, int midi, float velocity, int id)
+{
+    management->noteOn(channel, midi, velocity, id);
+}
+
+void DeviceManagementNoteOff(DeviceManagement* management, int channel, int midi, int id)
+{
+    management->noteOff(channel, midi, id);
+}
