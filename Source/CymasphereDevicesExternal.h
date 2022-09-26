@@ -21,7 +21,7 @@
 
 // Expose External
 extern "C" UNITY_INTERFACE_EXPORT DeviceManagement* UNITY_INTERFACE_API DeviceManagementCreate();
-extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementDelete(DeviceManagement* management);
+extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementDelete(const DeviceManagement* management);
 
 extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementRegisterCallback(
     DeviceManagement* management, ExternalMidiInputCallback callback);
@@ -33,29 +33,46 @@ extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementRefre
     DeviceManagement* management);
 
 extern "C" UNITY_INTERFACE_EXPORT int UNITY_INTERFACE_API DeviceManagementInputDeviceCount(
-    DeviceManagement* management);
+    const DeviceManagement* management);
 extern "C" UNITY_INTERFACE_EXPORT int UNITY_INTERFACE_API DeviceManagementOutputDeviceCount(
-    DeviceManagement* management);
+    const DeviceManagement* management);
 
 extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementInputDeviceIsEnabled(
-    DeviceManagement* management, int id);
+    const DeviceManagement* management, int id);
 extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementOutputDeviceIsEnabled(
-    DeviceManagement* management, int id);
+    const DeviceManagement* management, int id);
 extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementSetInputDeviceEnabled(
     DeviceManagement* management, int id, bool enabled);
 extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementSetOutputDeviceEnabled(
     DeviceManagement* management, int id, bool enabled);
 
 extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementGetInputDeviceName(
-    DeviceManagement* management, int id, char* str, int strlen);
+    const DeviceManagement* management, int id, char* str, int strlen);
 extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementGetInputDeviceIdentifier(
-    DeviceManagement* management, int id, char* str, int strlen);
+    const DeviceManagement* management, int id, char* str, int strlen);
 extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementGetOutputDeviceName(
-    DeviceManagement* management, int id, char* str, int strlen);
+    const DeviceManagement* management, int id, char* str, int strlen);
 extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementGetOutputDeviceIdentifier(
-    DeviceManagement* management, int id, char* str, int strlen);
+    const DeviceManagement* management, int id, char* str, int strlen);
+
+
+extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementSendMessage3(
+    const DeviceManagement* management, juce::uint8 byte1, juce::uint8 byte2, juce::uint8 byte3, int id);
+extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementSendMessage2(
+    const DeviceManagement* management, juce::uint8 byte1, juce::uint8 byte2, int id);
+extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementSendMessage1(
+    const DeviceManagement* management, juce::uint8 byte1, int id);
+
+extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementSendSysEx(
+    const DeviceManagement* management, const void* data, int dataSize, int id = -1);
 
 extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementNoteOn(
-    DeviceManagement* management, int channel, int midi, float velocity, int id);
+    const DeviceManagement* management, int channel, int midi, float velocity, int id);
 extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementNoteOff(
-    DeviceManagement* management, int channel, int midi, int id);
+    const DeviceManagement* management, int channel, int midi, int id);
+
+extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementAllNotesOff(
+    const DeviceManagement* management, int channel, int id);
+
+extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementAllSoundOff(
+    const DeviceManagement* management, int channel, int id);

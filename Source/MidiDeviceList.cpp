@@ -10,7 +10,7 @@
 
 #include "MidiDeviceList.h"
 
-MidiDeviceList::MidiDeviceList(bool input, juce::MidiInputCallback* callback)
+MidiDeviceList::MidiDeviceList(const bool input, juce::MidiInputCallback* callback)
 {
     isInput = input;
     this->callback = callback;
@@ -23,21 +23,21 @@ void MidiDeviceList::refresh()
     updateDeviceList();
 }
 
-int MidiDeviceList::size()
+int MidiDeviceList::size() const
 {
     return devices.size();
 }
 
-MidiDeviceListEntry::Ptr MidiDeviceList::get(int index)
+MidiDeviceListEntry::Ptr MidiDeviceList::get(int index) const
 {
     return devices[index];
 }
 
-bool MidiDeviceList::isEnabled(int index)
+bool MidiDeviceList::isEnabled(int index) const
 {
     return isInput
-               ? devices[index]->inDevice.get() != nullptr
-               : devices[index]->outDevice.get() != nullptr;
+               ? devices[index]->inDevice != nullptr
+               : devices[index]->outDevice != nullptr;
 }
 
 void MidiDeviceList::setActive(int index, bool active)
@@ -78,7 +78,7 @@ void MidiDeviceList::updateDeviceList()
         juce::ReferenceCountedArray<MidiDeviceListEntry> newDeviceList;
 
         // add all currently plugged-in devices to the device list
-        for (auto& newDevice : availableDevices)
+        for (const auto& newDevice : availableDevices)
         {
             MidiDeviceListEntry::Ptr entry = findDevice(newDevice);
 
@@ -92,7 +92,7 @@ void MidiDeviceList::updateDeviceList()
     }
 }
 
-bool MidiDeviceList::hasDeviceListChanged(const juce::Array<juce::MidiDeviceInfo>& availableDevices)
+bool MidiDeviceList::hasDeviceListChanged(const juce::Array<juce::MidiDeviceInfo>& availableDevices) const
 {
     if (availableDevices.size() != devices.size())
         return true;
@@ -118,41 +118,43 @@ void MidiDeviceList::closeUnpluggedDevices(const juce::Array<juce::MidiDeviceInf
     }
 }
 
-void MidiDeviceList::closeDevice(int index)
+// ReSharper disable once CppMemberFunctionMayBeConst
+void MidiDeviceList::closeDevice(const int index)
 {
     if (isInput)
     {
-        if(devices[index]->inDevice.get() == nullptr)
+        if (devices[index]->inDevice == nullptr)
         {
             return;
         }
-        
+
         devices[index]->inDevice->stop();
         devices[index]->inDevice.reset();
     }
     else
     {
-        if(devices[index]->outDevice.get() == nullptr)
+        if (devices[index]->outDevice == nullptr)
         {
             return;
         }
-        
+
         devices[index]->outDevice.reset();
     }
 }
 
-bool MidiDeviceList::openDevice(int index)
+// ReSharper disable once CppMemberFunctionMayBeConst
+bool MidiDeviceList::openDevice(const int index)
 {
     if (isInput)
     {
-        if (devices[index]->inDevice.get() != nullptr)
+        if (devices[index]->inDevice != nullptr)
         {
             return true;
         }
 
         devices[index]->inDevice = juce::MidiInput::openDevice(devices[index]->deviceInfo.identifier, callback);
 
-        if (devices[index]->inDevice.get() == nullptr)
+        if (devices[index]->inDevice == nullptr)
         {
             DBG("MidiDemo::openDevice: open input device for index = " << index << " failed!");
             return false;
@@ -161,14 +163,14 @@ bool MidiDeviceList::openDevice(int index)
         devices[index]->inDevice->start();
         return true;
     }
-    if (devices[index]->outDevice.get() != nullptr)
+    if (devices[index]->outDevice != nullptr)
     {
         return true;
     }
 
     devices[index]->outDevice = juce::MidiOutput::openDevice(devices[index]->deviceInfo.identifier);
 
-    if (devices[index]->outDevice.get() == nullptr)
+    if (devices[index]->outDevice == nullptr)
     {
         DBG("MidiDemo::openDevice: open output device for index = " << index << " failed!");
         return false;
@@ -179,7 +181,7 @@ bool MidiDeviceList::openDevice(int index)
 
 
 juce::ReferenceCountedObjectPtr<MidiDeviceListEntry> MidiDeviceList::findDevice(
-    juce::MidiDeviceInfo device) const
+    const juce::MidiDeviceInfo& device) const
 {
     for (auto& d : devices)
         if (d->deviceInfo == device)
