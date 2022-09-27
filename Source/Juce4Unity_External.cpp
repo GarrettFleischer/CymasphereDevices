@@ -1,14 +1,14 @@
 /*
   ==============================================================================
 
-    CymasphereDevicesExternal.cpp
+    Juce4Unity_External.cpp
     Created: 25 Sep 2022 5:30:29pm
     Author:  Garrett Fleischer
 
   ==============================================================================
 */
 
-#include "Juce4Unity.h"
+#include "Juce4Unity_External.h"
 
 
 DeviceManagement* DeviceManagementCreate()

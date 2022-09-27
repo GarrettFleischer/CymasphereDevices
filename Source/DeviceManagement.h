@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    CymasphereDevices.h
+    DeviceManagement.h
     Created: 25 Sep 2022 1:47:29pm
     Author:  Garrett Fleischer
 
@@ -17,7 +17,7 @@
 using ExternalMidiInputCallback = void(*)(int id, juce::uint8, juce::uint8, juce::uint8);
 using ExternalLogger = void(*)(char* str, int strlen);
 
-class DeviceManagement final : juce::MidiInputCallback
+class DeviceManagement final : juce::MidiInputCallback, juce::HighResolutionTimer
 {
 public:
     DeviceManagement();
@@ -56,12 +56,21 @@ public:
     void sendAllSoundOff(int channel, int id = -1) const;
 
 private:
+    struct MidiInputEvent
+    {
+        juce::MidiInput* source;
+        const juce::MidiMessage& message;
+    };
+    
     MidiDeviceList inputDevices;
     MidiDeviceList outputDevices;
     juce::Array<ExternalMidiInputCallback> callbacks;
     juce::Array<ExternalLogger> loggers;
+    juce::Array<MidiInputEvent> events;
+    juce::CriticalSection midiEventLock;
 
     void handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message) override;
+    void hiResTimerCallback() override;
 
     void logExternal(const juce::String& message);
 

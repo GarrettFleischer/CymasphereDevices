@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="UGRQRT" name="Juce4Unity" projectType="dll" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              cppLanguageStandard="17" companyName="Ethinx" companyCopyright="2022">
   <MAINGROUP id="oaR5Md" name="Juce4Unity">
     <GROUP id="{9C324DB6-3263-24EB-FA53-D11069715315}" name="Source">
-      <FILE id="MyT7UV" name="CymasphereDevices.cpp" compile="1" resource="0"
-            file="Source/CymasphereDevices.cpp"/>
-      <FILE id="iNp4Jk" name="CymasphereDevices.h" compile="0" resource="0"
-            file="Source/CymasphereDevices.h"/>
-      <FILE id="rx4DdH" name="CymasphereDevicesExternal.cpp" compile="1"
-            resource="0" file="Source/CymasphereDevicesExternal.cpp"/>
-      <FILE id="BnHl41" name="CymasphereDevicesExternal.h" compile="0" resource="0"
-            file="Source/CymasphereDevicesExternal.h"/>
+      <FILE id="xjKdu2" name="DeviceManagement.cpp" compile="1" resource="0"
+            file="Source/DeviceManagement.cpp"/>
+      <FILE id="IEdv0i" name="DeviceManagement.h" compile="0" resource="0"
+            file="Source/DeviceManagement.h"/>
+      <FILE id="l2UTFY" name="Juce4Unity_External.cpp" compile="1" resource="0"
+            file="Source/Juce4Unity_External.cpp"/>
+      <FILE id="Iu4h0E" name="Juce4Unity_External.h" compile="0" resource="0"
+            file="Source/Juce4Unity_External.h"/>
       <FILE id="j6dDyu" name="MidiDeviceList.cpp" compile="1" resource="0"
             file="Source/MidiDeviceList.cpp"/>
       <FILE id="FDqo7X" name="MidiDeviceList.h" compile="0" resource="0"

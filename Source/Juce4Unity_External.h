@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    CymasphereDevicesExternal.h
+    Juce4Unity_External.h
     Created: 25 Sep 2022 5:30:29pm
     Author:  Garrett Fleischer
 

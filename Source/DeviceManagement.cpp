@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    CymasphereDevices.cpp
+    DeviceManagement.cpp
     Created: 25 Sep 2022 1:47:29pm
     Author:  Garrett Fleischer
 
@@ -14,6 +14,7 @@ DeviceManagement::DeviceManagement()
     : inputDevices(true, this),
       outputDevices(false, this)
 {
+    startTimer(5);
 }
 
 DeviceManagement::~DeviceManagement()
@@ -24,21 +25,36 @@ DeviceManagement::~DeviceManagement()
 
 void DeviceManagement::handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message)
 {
-    auto index = 0;
-    for (; index < inputDevices.size(); ++index)
+    juce::ScopedLock s1(midiEventLock);
+    events.add(MidiInputEvent{source, message});
+}
+
+void DeviceManagement::hiResTimerCallback()
+{
+    juce::Array<MidiInputEvent> lEvents;
     {
-        if (inputDevices.get(index)->inDevice.get() == source)
-        {
-            break;
-        }
+        juce::ScopedLock s1(midiEventLock);
+        events.swapWith(lEvents);
     }
 
-    // logExternal(message.getDescription());
-
-    for (const auto callback : callbacks)
+    for (auto [source, message] : lEvents)
     {
-        const auto raw = message.getRawData();
-        callback(index, raw[0], raw[1], raw[2]);
+        auto index = 0;
+        for (; index < inputDevices.size(); ++index)
+        {
+            if (inputDevices.get(index)->inDevice.get() == source)
+            {
+                break;
+            }
+        }
+
+        // logExternal(message.getDescription());
+
+        for (const auto callback : callbacks)
+        {
+            const auto raw = message.getRawData();
+            callback(index, raw[0], raw[1], raw[2]);
+        }
     }
 }
 
