@@ -28,20 +28,19 @@ public:
 
     void refresh();
 
-    int inputDeviceCount() const;
-    int outputDeviceCount() const;
+    [[nodiscard]] int deviceCount() const;
 
-    bool inputDeviceIsEnabled(int id) const;
-    bool outputDeviceIsEnabled(int id) const;
+    [[nodiscard]] bool inputDeviceIsEnabled(int id) const;
+    [[nodiscard]] bool outputDeviceIsEnabled(int id) const;
 
     bool setInputDeviceEnabled(int id, bool enabled);
     bool setOutputDeviceEnabled(int id, bool enabled);
 
-    void getInputDeviceName(int id, char* str, int strlen) const;
-    void getInputDeviceIdentifier(int id, char* str, int strlen) const;
+    [[nodiscard]] bool deviceHasInput(int id) const;
+    [[nodiscard]] bool deviceHasOutput(int id) const;
 
-    void getOutputDeviceName(int id, char* str, int strlen) const;
-    void getOutputDeviceIdentifier(int id, char* str, int strlen) const;
+    void getDeviceName(int id, char* str, int strlen) const;
+    void getDeviceIdentifier(int id, char* str, int strlen) const;
 
     void sendMessage(juce::uint8 byte1, juce::uint8 byte2, juce::uint8 byte3, int id = -1) const;
     void sendMessage(juce::uint8 byte1, juce::uint8 byte2, int id = -1) const;
@@ -61,9 +60,8 @@ private:
         juce::MidiInput* source;
         const juce::MidiMessage& message;
     };
-    
-    MidiDeviceList inputDevices;
-    MidiDeviceList outputDevices;
+
+    MidiDeviceList devices;
     juce::Array<ExternalMidiInputCallback> callbacks;
     juce::Array<ExternalLogger> loggers;
     juce::Array<MidiInputEvent> events;

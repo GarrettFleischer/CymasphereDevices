@@ -10,13 +10,10 @@
 
 #include "MidiDeviceList.h"
 
-MidiDeviceList::MidiDeviceList(const bool input, juce::MidiInputCallback* callback)
+MidiDeviceList::MidiDeviceList(juce::MidiInputCallback* callback)
 {
-    isInput = input;
     this->callback = callback;
 }
-
-MidiDeviceList::~MidiDeviceList() = default;
 
 void MidiDeviceList::refresh()
 {
@@ -33,22 +30,22 @@ MidiDeviceListEntry::Ptr MidiDeviceList::get(int index) const
     return devices[index];
 }
 
-bool MidiDeviceList::isEnabled(int index) const
+bool MidiDeviceList::isEnabled(bool input, int index) const
 {
-    return isInput
+    return input
                ? devices[index]->inDevice != nullptr
                : devices[index]->outDevice != nullptr;
 }
 
-void MidiDeviceList::setActive(int index, bool active)
+void MidiDeviceList::setActive(bool input, int index, bool active)
 {
     if (active)
     {
-        openDevice(index);
+        openDevice(input, index);
     }
     else
     {
-        closeDevice(index);
+        closeDevice(input, index);
     }
 }
 
@@ -67,9 +64,16 @@ juce::ReferenceCountedArray<MidiDeviceListEntry>* MidiDeviceList::getDevices()
 
 void MidiDeviceList::updateDeviceList()
 {
-    auto availableDevices = isInput
-                                ? juce::MidiInput::getAvailableDevices()
-                                : juce::MidiOutput::getAvailableDevices();
+    const auto inputDevices = juce::MidiInput::getAvailableDevices();
+    const auto outputDevices = juce::MidiOutput::getAvailableDevices();
+    auto availableDevices = inputDevices;
+    for (const auto& outputDevice : outputDevices)
+    {
+        if (!availableDevices.contains(outputDevice))
+        {
+            availableDevices.add(outputDevice);
+        }
+    }
 
     if (hasDeviceListChanged(availableDevices))
     {
@@ -84,6 +88,9 @@ void MidiDeviceList::updateDeviceList()
 
             if (entry == nullptr)
                 entry = new MidiDeviceListEntry(newDevice);
+
+            entry->hasInput = inputDevices.contains(newDevice);
+            entry->hasOutput = outputDevices.contains(newDevice);
 
             newDeviceList.add(entry);
         }
@@ -112,16 +119,17 @@ void MidiDeviceList::closeUnpluggedDevices(const juce::Array<juce::MidiDeviceInf
 
         if (! currentlyPluggedInDevices.contains(d.deviceInfo))
         {
-            closeDevice(i);
+            closeDevice(true, i);
+            closeDevice(false, i);
             devices.remove(i);
         }
     }
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
-void MidiDeviceList::closeDevice(const int index)
+void MidiDeviceList::closeDevice(const bool input, const int index)
 {
-    if (isInput)
+    if (input)
     {
         if (devices[index]->inDevice == nullptr)
         {
@@ -143,13 +151,18 @@ void MidiDeviceList::closeDevice(const int index)
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
-bool MidiDeviceList::openDevice(const int index)
+bool MidiDeviceList::openDevice(const bool input, const int index)
 {
-    if (isInput)
+    if (input)
     {
         if (devices[index]->inDevice != nullptr)
         {
             return true;
+        }
+
+        if (devices[index]->outDevice != nullptr)
+        {
+            closeDevice(false, index);
         }
 
         devices[index]->inDevice = juce::MidiInput::openDevice(devices[index]->deviceInfo.identifier, callback);
@@ -163,9 +176,15 @@ bool MidiDeviceList::openDevice(const int index)
         devices[index]->inDevice->start();
         return true;
     }
+
     if (devices[index]->outDevice != nullptr)
     {
         return true;
+    }
+
+    if (devices[index]->inDevice != nullptr)
+    {
+        closeDevice(true, index);
     }
 
     devices[index]->outDevice = juce::MidiOutput::openDevice(devices[index]->deviceInfo.identifier);

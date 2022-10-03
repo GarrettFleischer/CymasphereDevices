@@ -22,36 +22,38 @@ struct MidiDeviceListEntry : juce::ReferenceCountedObject
     std::unique_ptr<juce::MidiInput> inDevice;
     std::unique_ptr<juce::MidiOutput> outDevice;
 
+    bool hasInput{false};
+    bool hasOutput{false};
+
     using Ptr = juce::ReferenceCountedObjectPtr<MidiDeviceListEntry>;
 };
 
-class MidiDeviceList
+class MidiDeviceList final
 {
 public:
-    MidiDeviceList(bool input, juce::MidiInputCallback* callback);
-    ~MidiDeviceList();
+    MidiDeviceList(juce::MidiInputCallback* callback);
 
     void refresh();
-    int size() const;
+    [[nodiscard]] int size() const;
 
-    MidiDeviceListEntry::Ptr get(int index) const;
+    [[nodiscard]] MidiDeviceListEntry::Ptr get(int index) const;
 
-    bool isEnabled(int index) const;
-    void setActive(int index, bool active);
+    [[nodiscard]] bool isEnabled(bool input, int index) const;
+    void setActive(bool input, int index, bool active);
 
     void iterate(void visit(MidiDeviceListEntry* entry));
 
     juce::ReferenceCountedArray<MidiDeviceListEntry>* getDevices();
 
 private:
-    bool isInput;
     juce::ReferenceCountedArray<MidiDeviceListEntry> devices;
     juce::MidiInputCallback* callback;
 
     void updateDeviceList();
-    bool hasDeviceListChanged(const juce::Array<juce::MidiDeviceInfo>& availableDevices) const;
+    [[nodiscard]] bool hasDeviceListChanged(const juce::Array<juce::MidiDeviceInfo>& availableDevices) const;
     void closeUnpluggedDevices(const juce::Array<juce::MidiDeviceInfo>& currentlyPluggedInDevices);
-    void closeDevice(int index);
-    bool openDevice(int index);
-    juce::ReferenceCountedObjectPtr<MidiDeviceListEntry> findDevice(const juce::MidiDeviceInfo& device) const;
+    void closeDevice(bool input, int index);
+    bool openDevice(bool input, int index);
+    [[nodiscard]] juce::ReferenceCountedObjectPtr<MidiDeviceListEntry> findDevice(
+        const juce::MidiDeviceInfo& device) const;
 };

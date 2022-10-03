@@ -32,9 +32,7 @@ extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementRegis
 extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementRefresh(
     DeviceManagement* management);
 
-extern "C" UNITY_INTERFACE_EXPORT int UNITY_INTERFACE_API DeviceManagementInputDeviceCount(
-    const DeviceManagement* management);
-extern "C" UNITY_INTERFACE_EXPORT int UNITY_INTERFACE_API DeviceManagementOutputDeviceCount(
+extern "C" UNITY_INTERFACE_EXPORT int UNITY_INTERFACE_API DeviceManagementDeviceCount(
     const DeviceManagement* management);
 
 extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementInputDeviceIsEnabled(
@@ -46,15 +44,16 @@ extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementSetIn
 extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementSetOutputDeviceEnabled(
     DeviceManagement* management, int id, bool enabled);
 
-extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementGetInputDeviceName(
-    const DeviceManagement* management, int id, char* str, int strlen);
-extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementGetInputDeviceIdentifier(
-    const DeviceManagement* management, int id, char* str, int strlen);
-extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementGetOutputDeviceName(
-    const DeviceManagement* management, int id, char* str, int strlen);
-extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementGetOutputDeviceIdentifier(
-    const DeviceManagement* management, int id, char* str, int strlen);
 
+extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementDeviceHasInput(
+    const DeviceManagement* management, int id);
+extern "C" UNITY_INTERFACE_EXPORT bool UNITY_INTERFACE_API DeviceManagementDeviceHasOutput(
+    const DeviceManagement* management, int id);
+
+extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementGetDeviceName(
+    const DeviceManagement* management, int id, char* str, int strlen);
+extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementGetDeviceIdentifier(
+    const DeviceManagement* management, int id, char* str, int strlen);
 
 extern "C" UNITY_INTERFACE_EXPORT void UNITY_INTERFACE_API DeviceManagementSendMessage3(
     const DeviceManagement* management, juce::uint8 byte1, juce::uint8 byte2, juce::uint8 byte3, int id);

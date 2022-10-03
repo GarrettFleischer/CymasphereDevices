@@ -11,8 +11,7 @@
 #include "DeviceManagement.h"
 
 DeviceManagement::DeviceManagement()
-    : inputDevices(true, this),
-      outputDevices(false, this)
+    : devices(this)
 {
     startTimer(5);
 }
@@ -40,9 +39,9 @@ void DeviceManagement::hiResTimerCallback()
     for (auto [source, message] : lEvents)
     {
         auto index = 0;
-        for (; index < inputDevices.size(); ++index)
+        for (; index < devices.size(); ++index)
         {
-            if (inputDevices.get(index)->inDevice.get() == source)
+            if (devices.get(index)->inDevice.get() == source)
             {
                 break;
             }
@@ -76,16 +75,16 @@ void DeviceManagement::sendMidiMessage(const int id, const juce::MidiMessage& me
     {
         if (outputDeviceIsEnabled(id))
         {
-            outputDevices.get(id)->outDevice->sendMessageNow(message);
+            devices.get(id)->outDevice->sendMessageNow(message);
         }
     }
     else
     {
-        for (int i = 0; i < outputDevices.size(); ++i)
+        for (int i = 0; i < devices.size(); ++i)
         {
             if (outputDeviceIsEnabled(i))
             {
-                outputDevices.get(i)->outDevice->sendMessageNow(message);
+                devices.get(i)->outDevice->sendMessageNow(message);
             }
         }
     }
@@ -103,63 +102,58 @@ void DeviceManagement::registerLogger(const ExternalLogger log)
 
 void DeviceManagement::refresh()
 {
-    inputDevices.refresh();
-    outputDevices.refresh();
+    devices.refresh();
 }
 
-int DeviceManagement::inputDeviceCount() const
+int DeviceManagement::deviceCount() const
 {
-    return inputDevices.size();
-}
-
-int DeviceManagement::outputDeviceCount() const
-{
-    return outputDevices.size();
+    return devices.size();
 }
 
 bool DeviceManagement::inputDeviceIsEnabled(const int id) const
 {
-    return inputDevices.isEnabled(id);
+    return devices.isEnabled(true, id);
 }
 
 bool DeviceManagement::outputDeviceIsEnabled(const int id) const
 {
-    return outputDevices.isEnabled(id);
+    return devices.isEnabled(false, id);
 }
 
 bool DeviceManagement::setInputDeviceEnabled(const int id, const bool enabled)
 {
-    inputDevices.setActive(id, enabled);
-    return inputDevices.isEnabled(id) == enabled;
+    devices.setActive(true, id, enabled);
+    return devices.isEnabled(true, id) == enabled;
 }
 
 bool DeviceManagement::setOutputDeviceEnabled(const int id, const bool enabled)
 {
-    outputDevices.setActive(id, enabled);
-    return outputDevices.isEnabled(id) == enabled;
+    devices.setActive(false, id, enabled);
+    return devices.isEnabled(false, id) == enabled;
 }
 
-void DeviceManagement::getInputDeviceName(const int id, char* str, const int strlen) const
+bool DeviceManagement::deviceHasInput(const int id) const
 {
-    inputDevices.get(id)->deviceInfo.name.copyToUTF8(str, strlen);
+    return devices.get(id)->hasInput;
 }
 
-void DeviceManagement::getInputDeviceIdentifier(const int id, char* str, const int strlen) const
+bool DeviceManagement::deviceHasOutput(const int id) const
 {
-    inputDevices.get(id)->deviceInfo.identifier.copyToUTF8(str, strlen);
+    return devices.get(id)->hasOutput;
 }
 
-void DeviceManagement::getOutputDeviceName(const int id, char* str, const int strlen) const
+void DeviceManagement::getDeviceName(const int id, char* str, const int strlen) const
 {
-    outputDevices.get(id)->deviceInfo.name.copyToUTF8(str, strlen);
+    devices.get(id)->deviceInfo.name.copyToUTF8(str, strlen);
 }
 
-void DeviceManagement::getOutputDeviceIdentifier(const int id, char* str, const int strlen) const
+void DeviceManagement::getDeviceIdentifier(const int id, char* str, const int strlen) const
 {
-    outputDevices.get(id)->deviceInfo.identifier.copyToUTF8(str, strlen);
+    devices.get(id)->deviceInfo.identifier.copyToUTF8(str, strlen);
 }
 
-void DeviceManagement::sendMessage(const juce::uint8 byte1, const juce::uint8 byte2, const juce::uint8 byte3, const int id) const
+void DeviceManagement::sendMessage(const juce::uint8 byte1, const juce::uint8 byte2, const juce::uint8 byte3,
+                                   const int id) const
 {
     const auto message = juce::MidiMessage(byte1, byte2, byte3);
     sendMidiMessage(id, message);

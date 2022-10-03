@@ -9,10 +9,8 @@
             file="Source/DeviceManagement.cpp"/>
       <FILE id="IEdv0i" name="DeviceManagement.h" compile="0" resource="0"
             file="Source/DeviceManagement.h"/>
-      <FILE id="l2UTFY" name="Juce4Unity_External.cpp" compile="1" resource="0"
-            file="Source/Juce4Unity_External.cpp"/>
-      <FILE id="Iu4h0E" name="Juce4Unity_External.h" compile="0" resource="0"
-            file="Source/Juce4Unity_External.h"/>
+      <FILE id="l2UTFY" name="External.cpp" compile="1" resource="0" file="Source/External.cpp"/>
+      <FILE id="Iu4h0E" name="External.h" compile="0" resource="0" file="Source/External.h"/>
       <FILE id="j6dDyu" name="MidiDeviceList.cpp" compile="1" resource="0"
             file="Source/MidiDeviceList.cpp"/>
       <FILE id="FDqo7X" name="MidiDeviceList.h" compile="0" resource="0"

@@ -8,7 +8,7 @@
   ==============================================================================
 */
 
-#include "Juce4Unity_External.h"
+#include "External.h"
 
 
 DeviceManagement* DeviceManagementCreate()
@@ -36,14 +36,9 @@ void DeviceManagementRefresh(DeviceManagement* management)
     management->refresh();
 }
 
-int DeviceManagementInputDeviceCount(const DeviceManagement* management)
+int DeviceManagementDeviceCount(const DeviceManagement* management)
 {
-    return management->inputDeviceCount();
-}
-
-int DeviceManagementOutputDeviceCount(const DeviceManagement* management)
-{
-    return management->outputDeviceCount();
+    return management->deviceCount();
 }
 
 bool DeviceManagementInputDeviceIsEnabled(const DeviceManagement* management, const int id)
@@ -66,26 +61,25 @@ bool DeviceManagementSetOutputDeviceEnabled(DeviceManagement* management, const 
     return management->setOutputDeviceEnabled(id, enabled);
 }
 
-void DeviceManagementGetInputDeviceName(const DeviceManagement* management, const int id, char* str, const int strlen)
+bool DeviceManagementDeviceHasInput(const DeviceManagement* management, int id)
 {
-    management->getInputDeviceName(id, str, strlen);
+    return management->deviceHasInput(id);
 }
 
-void DeviceManagementGetInputDeviceIdentifier(const DeviceManagement* management, const int id, char* str,
-                                              const int strlen)
+bool DeviceManagementDeviceHasOutput(const DeviceManagement* management, int id)
 {
-    management->getInputDeviceIdentifier(id, str, strlen);
+    return management->deviceHasOutput(id);
 }
 
-void DeviceManagementGetOutputDeviceName(const DeviceManagement* management, const int id, char* str, const int strlen)
+void DeviceManagementGetDeviceName(const DeviceManagement* management, int id, char* str, int strlen)
 {
-    management->getOutputDeviceName(id, str, strlen);
+    management->getDeviceName(id, str, strlen);
 }
 
-void DeviceManagementGetOutputDeviceIdentifier(const DeviceManagement* management, const int id, char* str,
-                                               const int strlen)
+void DeviceManagementGetDeviceIdentifier(const DeviceManagement* management, const int id, char* str,
+                                         const int strlen)
 {
-    management->getOutputDeviceIdentifier(id, str, strlen);
+    management->getDeviceIdentifier(id, str, strlen);
 }
 
 void DeviceManagementSendMessage3(const DeviceManagement* management, const juce::uint8 byte1, const juce::uint8 byte2,
